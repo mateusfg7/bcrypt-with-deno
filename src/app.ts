@@ -1,10 +1,9 @@
-import { Application  } from 'https://deno.land/x/oak/mod.ts'
+import { Application } from "https://deno.land/x/oak/mod.ts";
 
-const app = new Application()
+import router from "./routes.ts";
 
-app.use((ctx) => {
-  ctx.response.body = "Hello Word"
-})
+const App = new Application();
 
+App.use(router.routes());
 
-await app.listen("localhost:8000")
+await App.listen("localhost:8000");
