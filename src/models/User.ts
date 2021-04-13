@@ -6,12 +6,12 @@ class User extends Model {
 
   static fields = {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       unique: true,
       autoIncrement: true,
     },
     name: DataTypes.STRING,
-    email: DataTypes.STRING,
+    email: { type: DataTypes.STRING, unique: true },
     password_hash: DataTypes.STRING,
   };
 }
