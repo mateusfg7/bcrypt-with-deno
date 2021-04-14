@@ -1,3 +1,4 @@
+import * as bcrypt from 'https://deno.land/x/bcrypt/mod.ts';
 import type { RouterContext } from 'https://deno.land/x/oak/mod.ts';
 
 import User from '../models/User.ts';
@@ -44,12 +45,14 @@ export default {
       context.response.status = 500;
     }
 
+    const password_hash = await bcrypt.hash(password);
+
     try {
       await User.create([
         {
           name,
           email,
-          password_hash: password,
+          password_hash,
         },
       ]);
 
@@ -88,7 +91,12 @@ export default {
 
     const account = await User.where('email', email).first();
 
-    if (account.password_hash == password) {
+    const passwordMath = await bcrypt.compare(
+      password,
+      String(account.password_hash)
+    );
+
+    if (passwordMath) {
       context.response.status = 200;
       context.response.body = {
         id: account.id,
