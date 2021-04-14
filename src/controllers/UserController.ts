@@ -3,6 +3,8 @@ import type { RouterContext } from 'https://deno.land/x/oak/mod.ts';
 
 import User from '../models/User.ts';
 
+import checkIfEmailExists from '../utils/checkEmail.ts';
+
 interface CreateUserRequest {
   name: string;
   email: string;
@@ -31,9 +33,9 @@ export default {
     }: CreateUserRequest = await requestBody.value;
 
     try {
-      const listOfAccountsWithEmail = await User.where('email', email).all();
+      const emailExist = await checkIfEmailExists(email);
 
-      if (listOfAccountsWithEmail.length != 0) {
+      if (emailExist) {
         context.response.status = 400;
         context.response.body = {
           error: 'This email has already been registered',
@@ -75,9 +77,9 @@ export default {
     const { email, password }: LoginUserRequest = await requestBody.value;
 
     try {
-      const listOfAccountsWithEmail = await User.where('email', email).all();
+      const emailExist = await checkIfEmailExists(email);
 
-      if (listOfAccountsWithEmail.length == 0) {
+      if (!emailExist) {
         context.response.status = 403;
         context.response.body = {
           error: 'This account has not been registered',
