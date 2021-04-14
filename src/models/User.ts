@@ -11,7 +11,7 @@ class User extends Model {
       autoIncrement: true,
     },
     name: DataTypes.STRING,
-    email: { type: DataTypes.STRING, unique: true },
+    email: DataTypes.STRING,
     password_hash: DataTypes.STRING,
   };
 }
